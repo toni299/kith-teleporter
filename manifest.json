@@ -2,23 +2,29 @@
   "id": "kith-teleporter",
   "title": "Kith Teleporter",
   "description": "This module allows GMs to create teleportation elements on the game board in Foundry VTT.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "compatibility": {
-		"minimum": 10,
-		"verified": "12.325"
-	},
-  "authors": [{
-		"name": "toni299",
-		"email": "tonifelix299@gmail.com",
-		"discord": "endariel"
-	}],
+    "minimum": 10,
+    "verified": "12.325"
+  },
+  "authors": [
+    {
+      "name": "toni299",
+      "email": "tonifelix299@gmail.com",
+      "discord": "endariel"
+    }
+  ],
   "scripts": [],
-  "styles": ["styles.css"],
-  "esmodules": ["teleport.js"],
+  "styles": [
+    "styles.css"
+  ],
+  "esmodules": [
+    "teleport.js"
+  ],
   "languages": [],
   "packs": [],
   "dependencies": [],
   "url": "https://github.com/toni299/kith-teleporter",
   "manifest": "https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json",
-  "download": "https://github.com/toni299/kith-teleporter/releases/download/v1.1.0/kith-teleporter.zip"
+  "download": "https://github.com/toni299/kith-teleporter/releases/download/v1.1.1/kith-teleporter.zip"
 }

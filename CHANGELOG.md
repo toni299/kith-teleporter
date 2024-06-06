@@ -1,4 +1,8 @@
-# [](https://github.com/toni299/kith-teleporter/compare/v1.0.4...v) (2024-06-06)
+# [](https://github.com/toni299/kith-teleporter/compare/v1.1.1...v) (2024-06-06)
+
+
+
+## [1.1.1](https://github.com/toni299/kith-teleporter/compare/v1.0.4...v1.1.1) (2024-06-06)
 
 
 
