@@ -2,88 +2,84 @@ console.log("Kith Teleporter Module Loaded");
 
 Hooks.on('ready', () => {
   console.log("Kith Teleporter Module is ready");
+
+  // Añadir el botón a la barra de herramientas
+  Hooks.on('getSceneControlButtons', controls => {
+    const teleportButton = {
+      name: "teleport",
+      title: "Create Teleport",
+      icon: "fas fa-arrows-alt",
+      layer: "controls",
+      tools: [{
+        name: "createTeleport",
+        title: "Create Teleport",
+        icon: "fas fa-map-marker-alt",
+        onClick: createTeleport
+      }]
+    };
+
+    controls.push(teleportButton);
+  });
 });
 
+function createTeleport() {
+  console.log("Create Teleport button clicked");
 
-// console.log("Kith Teleporter Module Loaded");
+  // Aquí va la lógica para crear el teleport
+  // Puedes abrir un formulario o simplemente habilitar una herramienta para seleccionar los puntos de origen y destino
+  let originIconPath = "icons/origin-icon.png"; // Ruta del ícono de origen
+  let destinationIconPath = "icons/destination-icon.png"; // Ruta del ícono de destino
 
-// Hooks.once('init', () => {
-//   console.log('Teleport Module initialized');
-// });
+  new Dialog({
+    title: "Create Teleport",
+    content: `<p>Select the origin and destination points for the teleport.</p>`,
+    buttons: {
+      origin: {
+        icon: '<i class="fas fa-map-marker-alt"></i>',
+        label: "Select Origin",
+        callback: async () => {
+          let origin = await selectPoint();
+          if (origin) {
+            console.log("Origin selected:", origin);
+            let tile = await Tile.create({
+              img: originIconPath,
+              x: origin.x,
+              y: origin.y,
+              width: 64,
+              height: 64
+            });
+            console.log("Origin tile created:", tile);
+          }
+        }
+      },
+      destination: {
+        icon: '<i class="fas fa-map-marker-alt"></i>',
+        label: "Select Destination",
+        callback: async () => {
+          let destination = await selectPoint();
+          if (destination) {
+            console.log("Destination selected:", destination);
+            let tile = await Tile.create({
+              img: destinationIconPath,
+              x: destination.x,
+              y: destination.y,
+              width: 64,
+              height: 64
+            });
+            console.log("Destination tile created:", tile);
+          }
+        }
+      }
+    }
+  }).render(true);
+}
 
-// Hooks.once('ready', () => {
-//   console.log('Teleport Module ready');
-//   if (game.user.isGM) {
-//     // Añadir un botón para crear teleports
-//     const button = document.createElement('button');
-//     button.innerHTML = 'Create Teleport';
-//     button.onclick = createTeleport;
-//     document.body.appendChild(button);
-//   }
-// });
-
-// function createTeleport() {
-//   const dialogContent = `
-//     <form>
-//       <div class="form-group">
-//         <label>Destination Scene:</label>
-//         <select id="destination-scene">
-//           ${game.scenes.map(scene => `<option value="${scene.id}">${scene.name}</option>`).join('')}
-//         </select>
-//       </div>
-//       <div class="form-group">
-//         <label>Destination Coordinates (x, y):</label>
-//         <input type="text" id="destination-coordinates" placeholder="x,y"/>
-//       </div>
-//     </form>
-//   `;
-  
-//   new Dialog({
-//     title: 'Create Teleport',
-//     content: dialogContent,
-//     buttons: {
-//       create: {
-//         label: 'Create',
-//         callback: html => {
-//           const destinationScene = html.find('#destination-scene').val();
-//           const destinationCoordinates = html.find('#destination-coordinates').val().split(',');
-//           const destinationX = parseInt(destinationCoordinates[0]);
-//           const destinationY = parseInt(destinationCoordinates[1]);
-
-//           // Crear un nuevo teleport
-//           const teleport = {
-//             type: 'teleport',
-//             data: {
-//               destinationScene,
-//               destinationX,
-//               destinationY
-//             }
-//           };
-
-//           game.scenes.current.createEmbeddedEntity('Tile', teleport);
-//         }
-//       }
-//     },
-//     default: 'create'
-//   }).render(true);
-// }
-
-// Hooks.on('updateToken', (scene, token, updateData) => {
-//   const tokenX = updateData.x !== undefined ? updateData.x : token.x;
-//   const tokenY = updateData.y !== undefined ? updateData.y : token.y;
-
-//   const teleports = scene.data.tiles.filter(tile => tile.data.type === 'teleport');
-//   for (let teleport of teleports) {
-//     if (tokenX === teleport.x && tokenY === teleport.y) {
-//       const { destinationScene, destinationX, destinationY } = teleport.data;
-//       if (scene.id === destinationScene) {
-//         token.update({ x: destinationX, y: destinationY });
-//       } else {
-//         game.scenes.get(destinationScene).activate().then(() => {
-//           token.update({ x: destinationX, y: destinationY });
-//         });
-//       }
-//       break;
-//     }
-//   }
-// });
+async function selectPoint() {
+  return new Promise((resolve) => {
+    let handler = (event) => {
+      canvas.stage.off('mousedown', handler);
+      resolve({ x: event.data.origin.x, y: event.data.origin.y });
+    };
+    canvas.stage.on('mousedown', handler);
+  });
+}

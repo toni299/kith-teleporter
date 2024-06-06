@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - master
 
 jobs:
   build:
@@ -28,21 +28,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update version in module.json and create manifest.json
+      - name: Update version in manifest.json
         run: |
-          VERSION=$(echo "${GITHUB_REF}" | sed -e 's/^refs\/tags\///')
+          VERSION=$(date +%Y%m%d%H%M%S)
           DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/kith-teleporter.zip"
           MANIFEST_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/manifest.json"
-          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' module.json > tmp.$$.json && mv tmp.$$.json module.json
-          cp module.json manifest.json
+          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
 
       - name: Commit and push changes to master
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md module.json manifest.json
-          git commit -m "chore: update changelog, module version and manifest"
+          git add CHANGELOG.md manifest.json
+          git commit -m "chore: update changelog and manifest version"
           git push origin HEAD:master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Tag
+        id: tag
+        run: |
+          VERSION=$(jq -r '.version' manifest.json)
+          git tag $VERSION
+          git push origin $VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -50,26 +58,16 @@ jobs:
         run: |
           zip -r kith-teleporter.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
 
-      - name: Force push tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG_NAME=$(echo "${GITHUB_REF}" | sed -e 's/^refs\/tags\///')
-          git tag -d $TAG_NAME || true
-          git tag $TAG_NAME
-          git push origin :refs/tags/$TAG_NAME || true
-          git push origin $TAG_NAME
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          tag_name: ${{ steps.tag.outputs.VERSION }}
+          release_name: ${{ steps.tag.outputs.VERSION }}
           body: |
-            Release notes for ${{ github.ref }}.
+            Release notes for ${{ steps.tag.outputs.VERSION }}.
           draft: false
           prerelease: false
           files: |
