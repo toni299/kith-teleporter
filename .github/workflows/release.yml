@@ -70,9 +70,6 @@ jobs:
             Release notes for ${{ steps.tag.outputs.VERSION }}.
           draft: false
           prerelease: false
-          files: |
-            kith-teleporter.zip
-            manifest.json
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
