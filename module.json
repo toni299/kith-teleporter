@@ -44,6 +44,6 @@
   "packs": [],
   "dependencies": [],
   "url": "https://github.com/toni299/kith-teleporter",
-  "manifest": "",
+  "manifest": "https://raw.githubusercontent.com/toni299/kith-teleporter/master/module.json",
   "download": "https://github.com/toni299/kith-teleporter/releases/download/v0.0.8/kith-teleporter.zip"
 }
