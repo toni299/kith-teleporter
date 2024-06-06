@@ -1,6 +1,11 @@
 # [](https://github.com/toni299/kith-teleporter/compare/v1.0.1...v) (2024-06-06)
 
 
+### Bug Fixes
+
+* correcte pipeline errors ([bcce055](https://github.com/toni299/kith-teleporter/commit/bcce055e730da4aaa9f3cd1569bb0786401ff178))
+
+
 
 ## [1.0.1](https://github.com/toni299/kith-teleporter/compare/v1.0.2...v1.0.1) (2024-06-06)
 
