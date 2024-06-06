@@ -31,14 +31,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update version in manifest.json
-        id: update_version
+      - name: Bump Version
+        id: bump_version
         run: |
-          VERSION=$(date +%Y%m%d%H%M%S)
-          DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/kith-teleporter.zip"
-          MANIFEST_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/manifest.json"
-          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
+          npm install -g standard-version
+          VERSION=$(npx standard-version --dry-run | grep "###" | head -1 | awk '{print $2}')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Update version in manifest.json
+        run: |
+          DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/v${{ env.VERSION }}/kith-teleporter.zip"
+          MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json"
+          jq --arg version "${{ env.VERSION }}" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
 
       - name: Commit and push changes to master
         run: |
@@ -53,8 +57,8 @@ jobs:
       - name: Create Tag
         id: create_tag
         run: |
-          git tag ${{ env.VERSION }}
-          git push origin ${{ env.VERSION }}
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
 
       - name: Create Zip File
         run: |
@@ -66,10 +70,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: ${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
           body: |
-            Release notes for ${{ env.VERSION }}.
+            Release notes for v${{ env.VERSION }}.
           draft: false
           prerelease: false
 
