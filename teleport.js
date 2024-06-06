@@ -5,18 +5,20 @@ Hooks.on('ready', () => {
 
   // Añadir el botón a la barra de herramientas
   Hooks.on('getSceneControlButtons', controls => {
-    controls.push({
+    const teleportControls = {
       name: "teleport",
       title: "Create Teleport",
       icon: "fas fa-arrows-alt",
-      layer: "controls",
+      layer: "tiles", // Asegúrate de usar una capa válida
       tools: [{
         name: "createTeleport",
         title: "Create Teleport",
         icon: "fas fa-map-marker-alt",
         onClick: createTeleport
       }]
-    });
+    };
+
+    controls.push(teleportControls);
   });
 });
 
