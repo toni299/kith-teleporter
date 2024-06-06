@@ -4,8 +4,14 @@
 ### Bug Fixes
 
 * avoid pipeline loop ([f0c822a](https://github.com/toni299/kith-teleporter/commit/f0c822a55c33bd3209c93c95314072f3dad1eedf))
+* chatgpt missunderstanding ([06db6da](https://github.com/toni299/kith-teleporter/commit/06db6daaca3b327561f5751d02439f7eebd4ffef))
 * correcte pipeline errors ([bcce055](https://github.com/toni299/kith-teleporter/commit/bcce055e730da4aaa9f3cd1569bb0786401ff178))
 * previous commit ([4a8cb43](https://github.com/toni299/kith-teleporter/commit/4a8cb4377f2f26df75ece3c5f43b4e6db4344443))
+
+
+### Features
+
+* add licence and readme, fix pipeline versioning problem ([11c851d](https://github.com/toni299/kith-teleporter/commit/11c851d2f099e768e303779c7da1a104e7dac1b0))
 
 
 
