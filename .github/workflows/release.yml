@@ -24,22 +24,24 @@ jobs:
         id: changelog
         run: |
           npm install -g conventional-changelog-cli
-          conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+          conventional-chelog -p angular -i CHANGELOG.md -s -r 0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update version in module.json
+      - name: Update version in module.json and create manifest.json
         run: |
           VERSION=$(echo "${GITHUB_REF}" | sed -e 's/^refs\/tags\///')
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/kith-teleporter.zip"
-          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" '.version=$version | .download=$download' module.json > tmp.$$.json && mv tmp.$$.json module.json
+          DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/kith-teleporter.zip"
+          MANIFEST_URL="https://github.com/toni299/kith-teleporter/releases/download/${VERSION}/manifest.json"
+          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' module.json > tmp.$$.json && mv tmp.$$.json module.json
+          cp module.json manifest.json
 
       - name: Commit and push changes to master
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md module.json
-          git commit -m "chore: update changelog and module version"
+          git add CHANGELOG.md module.json manifest.json
+          git commit -m "chore: update changelog, module version and manifest"
           git push origin HEAD:master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,6 +72,9 @@ jobs:
             Release notes for ${{ github.ref }}.
           draft: false
           prerelease: false
+          files: |
+            kith-teleporter.zip
+            manifest.json
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
