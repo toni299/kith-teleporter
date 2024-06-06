@@ -4,23 +4,17 @@
   "description": "This module allows GMs to create teleportation elements on the game board in Foundry VTT.",
   "version": "1.1.1",
   "compatibility": {
-    "minimum": 10,
-    "verified": "12.325"
-  },
-  "authors": [
-    {
-      "name": "toni299",
-      "email": "tonifelix299@gmail.com",
-      "discord": "endariel"
-    }
-  ],
+		"minimum": 10,
+		"verified": "12.325"
+	},
+  "authors": [{
+		"name": "toni299",
+		"email": "tonifelix299@gmail.com",
+		"discord": "endariel"
+	}],
   "scripts": [],
-  "styles": [
-    "styles.css"
-  ],
-  "esmodules": [
-    "teleport.js"
-  ],
+  "styles": ["styles.css"],
+  "esmodules": ["teleport.js"],
   "languages": [],
   "packs": [],
   "dependencies": [],
