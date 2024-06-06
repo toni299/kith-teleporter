@@ -3,9 +3,9 @@ console.log("Kith Teleporter Module Loaded");
 Hooks.on('ready', () => {
   console.log("Kith Teleporter Module is ready");
 
-  // Añadir el botón a la barra de herramientas
+  // Añadir el botón como una categoría principal en la barra de herramientas
   Hooks.on('getSceneControlButtons', controls => {
-    const teleportControls = {
+    controls.push({
       name: "teleport",
       title: "Create Teleport",
       icon: "fas fa-arrows-alt",
@@ -15,17 +15,17 @@ Hooks.on('ready', () => {
         title: "Create Teleport",
         icon: "fas fa-map-marker-alt",
         onClick: () => {
+          console.log("Create Teleport button clicked"); // Depuración
           createTeleport();
         }
-      }]
-    };
-
-    controls.push(teleportControls);
+      }],
+      activeTool: "createTeleport"
+    });
   });
 });
 
 function createTeleport() {
-  console.log("Create Teleport button clicked");
+  console.log("Create Teleport function called");
   ui.notifications.info("Select the origin point for the teleport.");
 
   selectPoint().then(origin => {
