@@ -1,4 +1,13 @@
-# [](https://github.com/toni299/kith-teleporter/compare/v1.1.8...v) (2024-06-06)
+# [](https://github.com/toni299/kith-teleporter/compare/v1.1.9...v) (2024-06-06)
+
+
+### Bug Fixes
+
+* change position menu for tp button ([f0a0967](https://github.com/toni299/kith-teleporter/commit/f0a0967eaddfe2922284d00ec56b4a5579bba99a))
+
+
+
+## [1.1.9](https://github.com/toni299/kith-teleporter/compare/v1.1.8...v1.1.9) (2024-06-06)
 
 
 
