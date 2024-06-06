@@ -34,6 +34,20 @@ jobs:
           git commit -m "chore: update changelog"
           git push origin HEAD:${{ github.ref }}
 
+      - name: Update version in module.json
+        run: |
+          VERSION=$(echo "${GITHUB_REF}" | sed -e 's/^refs\/tags\///')
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/TeleportModule.zip"
+          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" '.version=$version | .download=$download' module.json > tmp.$$.json && mv tmp.$$.json module.json
+
+      - name: Commit updated module.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add module.json
+          git commit -m "chore: update module version to ${{ github.ref }}"
+          git push origin HEAD:${{ github.ref }}
+
       - name: Create Zip File
         run: |
           zip -r TeleportModule.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
