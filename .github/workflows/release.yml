@@ -22,11 +22,12 @@ jobs:
         id: changelog
         run: |
           npm install -g conventional-changelog-cli
-          conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+          conventional-changelog -p angular -i CHANGELOG.md -s -r 0 || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create temporary branch
+        id: create_branch
         run: |
           BRANCH_NAME="update-changelog-$(date +%s)"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
@@ -38,14 +39,18 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md
-          git commit -m "chore: update changelog"
-          git push --set-upstream origin ${{ env.BRANCH_NAME }}
+          if [ -s CHANGELOG.md ]; then
+            git add CHANGELOG.md
+            git commit -m "chore: update changelog"
+            git push --set-upstream origin ${{ env.BRANCH_NAME }}
+          else
+            echo "No changes to the changelog."
+          fi
 
       - name: Update version in module.json
         run: |
           VERSION=$(echo "${GITHUB_REF}" | sed -e 's/^refs\/tags\///')
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/TeleportModule.zip"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/kith-teleporter.zip"
           jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" '.version=$version | .download=$download' module.json > tmp.$$.json && mv tmp.$$.json module.json
 
       - name: Commit updated module.json
@@ -60,7 +65,7 @@ jobs:
 
       - name: Create Zip File
         run: |
-          zip -r TeleportModule.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
+          zip -r kith-teleporter.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
 
       - name: Force push tag
         env:
@@ -91,6 +96,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./TeleportModule.zip
-          asset_name: TeleportModule.zip
+          asset_path: ./kith-teleporter.zip
+          asset_name: kith-teleporter.zip
           asset_content_type: application/zip
