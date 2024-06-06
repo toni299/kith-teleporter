@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Asegurarse de que tenemos el historial completo para realizar el push
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -32,52 +34,15 @@ jobs:
           DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/kith-teleporter.zip"
           jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" '.version=$version | .download=$download' module.json > tmp.$$.json && mv tmp.$$.json module.json
 
-      - name: Create temporary branch and commit changes
+      - name: Commit and push changes to master
         run: |
-          BRANCH_NAME="update-changelog-$(date +%s)"
-          git checkout -b $BRANCH_NAME
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG.md module.json
           git commit -m "chore: update changelog and module version"
-          git push --set-upstream origin $BRANCH_NAME
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          git push origin HEAD:master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create pull request
-        id: create_pr
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update changelog and module version"
-          branch: ${{ env.BRANCH_NAME }}
-          title: "Update changelog and module version"
-          body: "This PR updates the changelog and module version."
-          base: master
-
-      - name: Merge pull request
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const pr = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: `${{ github.repository }}:${{ env.BRANCH_NAME }}`,
-              state: 'open'
-            }).then(response => response.data.find(pr => pr.head.ref === '${{ env.BRANCH_NAME }}'));
-
-            if (!pr) {
-              throw new Error('Pull request not found');
-            }
-
-            await github.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pr.number,
-              merge_method: 'squash'
-            });
 
       - name: Create Zip File
         run: |
