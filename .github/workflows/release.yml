@@ -35,12 +35,13 @@ jobs:
         id: bump_version
         run: |
           npm install -g standard-version
-          VERSION=$(npx standard-version --dry-run | grep "tagging release" | awk '{print $4}')
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          npx standard-version --skip.tag=true --skip.commit=true
+          VERSION=$(grep '"version":' package.json | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Update version in manifest.json
         run: |
-          DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/${{ env.VERSION }}/kith-teleporter.zip"
+          DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/v${{ env.VERSION }}/kith-teleporter.zip"
           MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json"
           jq --arg version "${{ env.VERSION }}" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
 
@@ -57,8 +58,8 @@ jobs:
       - name: Create Tag
         id: create_tag
         run: |
-          git tag ${{ env.VERSION }}
-          git push origin ${{ env.VERSION }}
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
 
       - name: Create Zip File
         run: |
@@ -70,10 +71,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: ${{ env.VERSION }}
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
           body: |
-            Release notes for ${{ env.VERSION }}.
+            Release notes for v${{ env.VERSION }}.
           draft: false
           prerelease: false
 
