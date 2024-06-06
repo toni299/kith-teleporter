@@ -1,4 +1,13 @@
-# [](https://github.com/toni299/kith-teleporter/compare/v0.0.8...v) (2024-06-06)
+# [](https://github.com/toni299/kith-teleporter/compare/v1.0.0...v) (2024-06-06)
+
+
+
+# [1.0.0](https://github.com/toni299/kith-teleporter/compare/v0.0.8...v1.0.0) (2024-06-06)
+
+
+### Features
+
+* create version v1 ([3ff3211](https://github.com/toni299/kith-teleporter/commit/3ff3211324ec5b6929ff632fc50be6b6deed2521))
 
 
 
