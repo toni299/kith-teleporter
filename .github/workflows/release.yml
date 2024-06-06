@@ -57,26 +57,12 @@ jobs:
           base: master
 
       - name: Merge pull request
-        uses: actions/github-script@v4
+        id: merge_pr
+        uses: peter-evans/merge-pull-request@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const pr = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head: `${{ github.actor }}:${{ env.BRANCH_NAME }}`,
-              state: 'open'
-            });
-            if (pr.data.length > 0) {
-              await github.pulls.merge({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pr.data[0].number,
-                merge_method: 'squash'
-              });
-            } else {
-              throw new Error("Pull request not found");
-            }
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request: ${{ steps.create_pr.outputs.pull-request-number }}
+          merge-method: squash
 
       - name: Create Zip File
         run: |
