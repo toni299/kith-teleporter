@@ -14,7 +14,9 @@ Hooks.on('ready', () => {
         name: "createTeleport",
         title: "Create Teleport",
         icon: "fas fa-map-marker-alt",
-        onClick: createTeleport
+        onClick: () => {
+          createTeleport();
+        }
       }]
     };
 
