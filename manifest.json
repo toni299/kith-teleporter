@@ -2,7 +2,7 @@
   "name": "kith-teleporter",
   "title": "Kith Teleporter",
   "description": "Este módulo permite al GM crear elementos de teletransporte en el tablero.",
-  "version": "v1.0.0",
+  "version": "v1.0.1",
   "author": "toni299",
   "minimumCoreVersion": "0.8.0",
   "compatibleCoreVersion": "12",
@@ -17,6 +17,6 @@
   "packs": [],
   "dependencies": [],
   "url": "https://github.com/toni299/kith-teleporter",
-  "manifest": "https://github.com/toni299/kith-teleporter/releases/download/v1.0.0/manifest.json",
-  "download": "https://github.com/toni299/kith-teleporter/releases/download/v1.0.0/kith-teleporter.zip"
+  "manifest": "https://github.com/toni299/kith-teleporter/releases/download/v1.0.1/manifest.json",
+  "download": "https://github.com/toni299/kith-teleporter/releases/download/v1.0.1/kith-teleporter.zip"
 }
