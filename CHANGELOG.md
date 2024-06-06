@@ -1,4 +1,8 @@
-# [](https://github.com/toni299/kith-teleporter/compare/v1.1.9...v) (2024-06-06)
+# [](https://github.com/toni299/kith-teleporter/compare/v1.1.10...v) (2024-06-06)
+
+
+
+## [1.1.10](https://github.com/toni299/kith-teleporter/compare/v1.1.9...v1.1.10) (2024-06-06)
 
 
 ### Bug Fixes
