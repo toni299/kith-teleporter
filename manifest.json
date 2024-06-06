@@ -1,4 +1,5 @@
 {
+  "id": "kith-teleporter",
   "name": "kith-teleporter",
   "title": "Kith Teleporter",
   "description": "Este módulo permite al GM crear elementos de teletransporte en el tablero.",
