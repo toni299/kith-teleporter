@@ -5,7 +5,7 @@ Hooks.on('ready', () => {
 
   // Añadir el botón a la barra de herramientas
   Hooks.on('getSceneControlButtons', controls => {
-    const teleportButton = {
+    controls.push({
       name: "teleport",
       title: "Create Teleport",
       icon: "fas fa-arrows-alt",
@@ -16,9 +16,7 @@ Hooks.on('ready', () => {
         icon: "fas fa-map-marker-alt",
         onClick: createTeleport
       }]
-    };
-
-    controls.push(teleportButton);
+    });
   });
 });
 
