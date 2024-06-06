@@ -1,3 +1,4 @@
+// teleport.js
 console.log("Kith Teleporter Module Loaded");
 
 Hooks.on('ready', () => {
@@ -75,3 +76,5 @@ async function selectPoint() {
     canvas.stage.on('mousedown', handler);
   });
 }
+
+export { createTeleport, selectPoint }; // Exporta las funciones si necesitas reutilizarlas o probarlas
