@@ -46,6 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
+        id: create_pr
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -54,6 +55,29 @@ jobs:
           title: "Update changelog and module version"
           body: "This PR updates the changelog and module version."
           base: master
+
+      - name: Merge pull request
+        id: merge_pr
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: (await github.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: context.repo.owner + ':' + '${{ env.BRANCH_NAME }}',
+                state: 'open'
+              })).data[0].number
+            });
+            await github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.data.number,
+              merge_method: 'squash'
+            });
 
       - name: Create Zip File
         run: |
