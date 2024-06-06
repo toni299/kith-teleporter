@@ -19,28 +19,7 @@
     "styles.css"
   ],
   "esmodules": [],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    },
-    {
-      "lang": "de",
-      "name": "Deutsch",
-      "path": "lang/de.json"
-    },
-    {
-      "lang": "es",
-      "name": "Spanish",
-      "path": "lang/es.json"
-    },
-    {
-      "lang": "ja",
-      "name": "日本語",
-      "path": "lang/ja.json"
-    }
-  ],
+  "languages": [],
   "packs": [],
   "dependencies": [],
   "url": "https://github.com/toni299/kith-teleporter",
