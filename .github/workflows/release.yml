@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Asegurarse de que tenemos el historial completo para realizar el push
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -33,23 +33,25 @@ jobs:
       - name: Bump Version
         id: bump_version
         run: |
-          VERSION=$(jq -r '.version' manifest.json)
+          VERSION=$(jq -r '.version' module.json)
           NEW_VERSION=$(echo $VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          jq --arg version "$NEW_VERSION" '.version=$version' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
+          jq --arg version "$NEW_VERSION" '.version=$version' module.json > tmp.$$.json && mv tmp.$$.json module.json
 
-      - name: Update manifest download and manifest URLs
+      - name: Update module download and manifest URLs
         run: |
           DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/v${{ env.VERSION }}/kith-teleporter.zip"
-          MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json"
-          jq --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
+          MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/module.json"
+          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' module.json > tmp.$$.json && mv tmp.$$.json module.json
+        env:
+          VERSION: ${{ env.VERSION }}
 
       - name: Commit and push changes to master
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md manifest.json
-          git commit -m "[skip ci] chore: update changelog and manifest version"
+          git add CHANGELOG.md module.json
+          git commit -m "[skip ci] chore: update changelog and module version"
           git push origin HEAD:master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,27 +66,4 @@ jobs:
 
       - name: Create Zip File
         run: |
-          zip -r kith-teleporter.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.VERSION }}
-          release_name: v${{ env.VERSION }}
-          body: |
-            Release notes for v${{ env.VERSION }}.
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kith-teleporter.zip
-          asset_name: kith-teleporter.zip
-          asset_content_type: application/zip
+          zip -r kith-telepo
