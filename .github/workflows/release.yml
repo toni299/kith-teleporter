@@ -24,7 +24,7 @@ jobs:
         id: changelog
         run: |
           npm install -g conventional-changelog-cli
-          conventional-chelog -p angular -i CHANGELOG.md -s -r 0
+          conventional-changelog -p angular -i CHANGELOG.md -s -r 0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
