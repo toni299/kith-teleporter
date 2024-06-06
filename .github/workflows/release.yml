@@ -43,7 +43,7 @@ jobs:
         run: |
           DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/v${{ env.VERSION }}/kith-teleporter.zip"
           MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json"
-          jq --arg version "$VERSION" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
+          jq --arg version "${{ env.VERSION }}" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
         env:
           VERSION: ${{ env.VERSION }}
 
