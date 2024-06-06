@@ -66,4 +66,27 @@ jobs:
 
       - name: Create Zip File
         run: |
-          zip -r kith-teleporter
+          zip -r kith-teleporter.zip . -x ".git/*" -x ".github/*" -x "node_modules/*" -x "package-lock.json" -x "package.json"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
+          body: |
+            Release notes for v${{ env.VERSION }}.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kith-teleporter.zip
+          asset_name: kith-teleporter.zip
+          asset_content_type: application/zip
