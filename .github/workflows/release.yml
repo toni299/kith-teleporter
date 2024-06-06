@@ -66,4 +66,4 @@ jobs:
 
       - name: Create Zip File
         run: |
-          zip -r kith-telepo
+          zip -r kith-teleporter
