@@ -18,5 +18,6 @@
   "dependencies": [],
   "url": "https://github.com/toni299/kith-teleporter",
   "manifest": "https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json",
-  "download": "https://github.com/toni299/kith-teleporter/releases/download//kith-teleporter.zip"
+  "download": "https://github.com/toni299/kith-teleporter/releases/download//kith-teleporter.zip",
+  "license": "MIT"
 }

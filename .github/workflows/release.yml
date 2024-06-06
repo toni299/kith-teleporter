@@ -6,7 +6,6 @@ on:
       - master
     paths-ignore:
       - '**/CHANGELOG.md'
-      - '**/manifest.json'
 
 jobs:
   build:
@@ -34,18 +33,16 @@ jobs:
       - name: Bump Version
         id: bump_version
         run: |
-          npm install -g standard-version
-          npx standard-version --skip.tag=true --skip.commit=true
-          VERSION=$(node -pe "require('./package.json').version")
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          VERSION=$(jq -r '.version' manifest.json)
+          NEW_VERSION=$(echo $VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          jq --arg version "$NEW_VERSION" '.version=$version' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
 
-      - name: Update version in manifest.json
+      - name: Update manifest download and manifest URLs
         run: |
           DOWNLOAD_URL="https://github.com/toni299/kith-teleporter/releases/download/v${{ env.VERSION }}/kith-teleporter.zip"
           MANIFEST_URL="https://raw.githubusercontent.com/toni299/kith-teleporter/master/manifest.json"
-          jq --arg version "${{ env.VERSION }}" --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.version=$version | .download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
-        env:
-          VERSION: ${{ env.VERSION }}
+          jq --arg download "$DOWNLOAD_URL" --arg manifest "$MANIFEST_URL" '.download=$download | .manifest=$manifest' manifest.json > tmp.$$.json && mv tmp.$$.json manifest.json
 
       - name: Commit and push changes to master
         run: |
